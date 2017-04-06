@@ -27,7 +27,20 @@ source <- data.frame(source)
 
 model_data = source[which(is.na(source["Viability"])== FALSE),] #100 data
 kaggle_data = source[which(is.na(source["Viability"])== TRUE),] #20 data
+
+output_file <- read.csv(file="test.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
 ```
 
-## temp
+## Model 1: MLR
+```{r}
+mlr = lm(Viability ~ ., data = model_data)
+predict_value = predict(mlr, kaggle_data) #predict value
+output_file[,2] = predict_value
+
+#write to file
+write.table(output_file, file ="submission.csv", sep = ",", qmethod = "double", row.names = FALSE) #the file you want to submit to kaggle
+```
+
+## Model 2: Random Forest
+```{r}
 ```
