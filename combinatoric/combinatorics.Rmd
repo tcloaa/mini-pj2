@@ -1,0 +1,33 @@
+---
+title: "Combinatorics Data"
+author: "ggwp"
+date: "6 April 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+## Library
+```{r}
+library(glmnet)
+library(Metrics)
+require(doMC)
+library(data.table)
+registerDoMC(cores=4)
+```
+
+## Data Pre-processing
+The following function is to read data.
+```{r}
+source <- read.csv(file="train.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+rownames(source) <- source[,1]
+source[,1] <- NULL #eliminate variable "ID"
+source <- data.frame(source)
+
+model_data = source[which(is.na(source["Viability"])== FALSE),] #100 data
+kaggle_data = source[which(is.na(source["Viability"])== TRUE),] #20 data
+```
+
+## temp
+```
