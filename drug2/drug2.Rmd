@@ -1,0 +1,85 @@
+---
+title: "Combinatorics Data"
+author: "ggwp"
+date: "6 April 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+## Library
+```{r}
+require(doMC)
+library(data.table)
+registerDoMC(cores=4)
+```
+
+## Data Pre-processing
+The following function is to read data.
+```{r}
+source <- read.csv(file="train.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+rownames(source) <- source[,1]
+source[,1] <- NULL #eliminate variable "ID"
+source <- data.frame(source)
+
+model_data = source[which(is.na(source["IC50s"])== FALSE),] #542 data
+kaggle_data = source[which(is.na(source["IC50s"])== TRUE),] #100 data
+
+output_file <- read.csv(file="submission.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
+```
+
+## Model 2: Regression Tree
+```{r}
+library(tree)
+
+# simple regression tree
+tree1 = tree(IC50s ~ . - Cell.lines, model_data)
+
+# prune the tree
+cv_data = cv.tree(tree1)
+prune_tree1 = prune.tree(tree1, best = 5)
+
+#write submission
+predict_value = predict(tree1, newdata = kaggle_data)
+output_file[,2] = predict_value
+write.table(output_file, file ="submission.csv", sep = ",", qmethod = "double", row.names = FALSE) #the file you want to submit to kaggle
+```
+
+## Model 3: Random Forest
+```{r}
+library(randomForest)
+
+forest1 = randomForest(IC50s ~ . - Cell.lines, model_data, mtry = 8, importantce = TRUE) #p = 62, p^0.5 = 7.8
+predict_value = predict(forest1, newdata = kaggle_data)
+
+
+#write to file
+output_file[,2] = predict_value
+write.table(output_file, file ="submission.csv", sep = ",", qmethod = "double", row.names = FALSE)
+```
+
+## Model 4: Bagging
+```{r}
+library(randomForest)
+
+forest1 = randomForest(IC50s ~ . - Cell.lines, model_data, mtry = 62, importantce = TRUE)#p = 62
+predict_value = predict(forest1, newdata = kaggle_data)
+
+#write to file
+output_file[,2] = predict_value
+write.table(output_file, file ="submission.csv", sep = ",", qmethod = "double", row.names = FALSE)
+```
+
+## Model 5: Boosting (odd error solution: In RStudio, just resize the right side to increase the width of the windows)
+```{r}
+library(gbm)
+
+boost1 = gbm(IC50s ~ . - Cell.lines, data = model_data, distribution = "gaussian", n.trees = 5000, interaction.depth = 1)
+predict_value = predict(boost1, newdata = kaggle_data, n.trees = 5000)
+
+#write to file
+output_file[,2] = predict_value
+write.table(output_file, file ="submission.csv", sep = ",", qmethod = "double", row.names = FALSE)
+```
+
