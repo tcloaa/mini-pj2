@@ -63,3 +63,9 @@ print mean_squared_error(y_test, pred2)
 regr3 = GradientBoostingRegressor(n_estimators=500, learning_rate=0.01, random_state=1)
 regr3.fit(X_train, y_train.ravel())
 print mean_squared_error(y_test, regr3.predict(X_test))
+Importance = pd.DataFrame({'Importance':regr1.feature_importances_*100}, index=['rincpc','econgrow','unemp','citypop','a0_5','a5_9','a10_14','a15_19','a20_24','a25_29','citybla','cityfemh','sta_educ','sta_welf','price','sworn','civil','elecyear','governor','term2','term3','termlim','mayor'])
+
+Importance.sort_values('Importance', axis=0, ascending=True).plot(kind='barh', color='r', )
+plt.xlabel('Variable Importance')
+plt.gca().legend_ = None
+plt.savefig("importance.png")
