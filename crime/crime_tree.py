@@ -44,3 +44,22 @@ graph = print_tree(regr, features=['rincpc','econgrow','unemp','citypop','a0_5',
 
 pred = regr.predict(X_test)
 print mean_squared_error(y_test, pred)
+
+print X.shape
+
+# bagging using all features
+regr1 = RandomForestRegressor(max_features=23, random_state=1)
+regr1.fit(X_train, y_train.ravel())
+pred1 = regr1.predict(X_test)
+print mean_squared_error(y_test, pred1)
+
+# less features
+regr2 = RandomForestRegressor(max_features=10, random_state=1)
+regr2.fit(X_train, y_train.ravel())
+pred2 = regr2.predict(X_test)
+print mean_squared_error(y_test, pred2)
+
+# boosting
+regr3 = GradientBoostingRegressor(n_estimators=500, learning_rate=0.01, random_state=1)
+regr3.fit(X_train, y_train.ravel())
+print mean_squared_error(y_test, regr3.predict(X_test))
