@@ -35,12 +35,72 @@ output_file <- read.csv(file="test.csv", header=TRUE, sep=",", stringsAsFactors=
 ```{r}
 mlr = lm(Viability ~ ., data = model_data)
 predict_value = predict(mlr, kaggle_data) #predict value
-output_file[,2] = predict_value
 
 #write to file
+output_file[,2] = predict_value
 write.table(output_file, file ="submission.csv", sep = ",", qmethod = "double", row.names = FALSE) #the file you want to submit to kaggle
 ```
 
-## Model 2: Random Forest
+## Model 2: Regression Tree
 ```{r}
+library(tree)
+library(ISLR)
+library(gbm)
+library(randomForest)
+
+# simple regression tree
+tree1 = tree(Viability ~ ., model_data)
+
+# prune the tree
+cv_data = cv.tree(tree1)
+prune_tree1 = prune.tree(tree1, best = 5)
+
+#write submission
+y_predict_tree = predict(tree1, newdata = kaggle_data)
+output_file[,2] = y_predict_tree
+write.table(output_file, file ="submission.csv", sep = ",", qmethod = "double", row.names = FALSE) #the file you want to submit to kaggle
 ```
+
+## Model 3: Random Forest
+```{r}
+library(MASS)
+library(tree)
+library(ISLR)
+library(randomForest)
+
+forest1 = randomForest(Viability ~ ., model_data, mtry = 7, importantce = TRUE)
+y_predict_rf = predict(forest1, newdata = kaggle_data)
+
+
+#write to file
+output_file[,2] = y_predict_rf
+write.table(output_file, file ="submission.csv", sep = ",", qmethod = "double", row.names = FALSE)
+```
+
+## Model 4: Bagging
+```{r}
+library(MASS)
+library(tree)
+library(ISLR)
+library(randomForest)
+
+forest1 = randomForest(Viability ~ ., model_data, mtry = 20, importantce = TRUE)
+y_predict_bg= predict(forest1, newdata = kaggle_data)
+
+
+#write to file
+output_file[,2] = y_predict_bg
+write.table(output_file, file ="submission.csv", sep = ",", qmethod = "double", row.names = FALSE)
+```
+
+## Model 5: Boosting (RStudio error)
+```{r}
+library(gbm)
+boost1 = gbm(Viability ~ ., data = model_data, distribution = "gaussian", n.trees = 5000, interaction.depth = 1)
+y_predict_boost = predict(boost1, newdata = kaggle_data, n.trees = 5000)
+
+#write to file
+output_file[,2] = y_predict_boost
+write.table(output_file, file ="submission.csv", sep = ",", qmethod = "double", row.names = FALSE)
+```
+
