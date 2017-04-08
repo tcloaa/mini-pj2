@@ -63,7 +63,7 @@ write.table(output_file, file ="submission.csv", sep = ",", qmethod = "double", 
 ```{r}
 library(randomForest)
 
-forest1 = randomForest(IC50s ~ . - Cell.lines, model_data, mtry = 62, importantce = TRUE, n.trees = 5000)#p = 62
+forest1 = randomForest(IC50s ~ . - Cell.lines, model_data, mtry = 25, importantce = TRUE, n.trees = 5000)#p = 62
 predict_value = predict(forest1, newdata = kaggle_data)
 
 #write to file
