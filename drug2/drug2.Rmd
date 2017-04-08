@@ -50,7 +50,7 @@ write.table(output_file, file ="submission.csv", sep = ",", qmethod = "double", 
 ```{r}
 library(randomForest)
 
-forest1 = randomForest(IC50s ~ . - Cell.lines, model_data, mtry = 8, importantce = TRUE) #p = 62, p^0.5 = 7.8
+forest1 = randomForest(IC50s ~ . - Cell.lines, model_data, mtry = 26, importantce = TRUE) #p = 62, p^0.5 = 7.8
 predict_value = predict(forest1, newdata = kaggle_data)
 
 
@@ -82,4 +82,22 @@ predict_value = predict(boost1, newdata = kaggle_data, n.trees = 5000)
 output_file[,2] = predict_value
 write.table(output_file, file ="submission.csv", sep = ",", qmethod = "double", row.names = FALSE)
 ```
+
+## 5-Fold Cross Validation for all models
+```{r}
+library(cvTools)
+```
+
+## 5-Fold Cross Validation for random forest
+```{r}
+
+```
+
+
+
+
+
+
+
+
 
