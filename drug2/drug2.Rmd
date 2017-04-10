@@ -29,49 +29,51 @@ kaggle_data = source[which(is.na(source["IC50s"])== TRUE),] #100 data
 output_file <- read.csv(file="submission.csv", header=TRUE, sep=",", stringsAsFactors=FALSE)
 ```
 
-## Model 2: Regression Tree
+## Model 2: Bagging
 ```{r}
-library(tree)
+library(randomForest)
 
-# simple regression tree
-tree1 = tree(IC50s ~ . - Cell.lines, model_data)
+forest1 = randomForest(IC50s ~ . - Cell.lines, model_data, mtry = ncol(model_data), n.trees = 5000, importance = TRUE)
+predict_value = predict(forest1, newdata = kaggle_data)
 
-# prune the tree
-cv_data = cv.tree(tree1)
-prune_tree1 = prune.tree(tree1, best = 5)
+importance (forest1)
+varImpPlot (forest1)
 
-#write submission
-predict_value = predict(tree1, newdata = kaggle_data)
+#write to file
 output_file[,2] = predict_value
-write.table(output_file, file ="submission.csv", sep = ",", qmethod = "double", row.names = FALSE) #the file you want to submit to kaggle
+write.table(output_file, file ="submission_bagging.csv", sep = ",", qmethod = "double", row.names = FALSE)
 ```
 
 ## Model 3: Random Forest
+Random forests provide an improvement over bagged trees by way of a random small tweak that decorrelates the trees.
 ```{r}
 library(randomForest)
 
-forest1 = randomForest(IC50s ~ . - Cell.lines, model_data, mtry = 26, importantce = TRUE) #p = 62, p^0.5 = 7.8
+forest1 = randomForest(IC50s ~ . - Cell.lines, model_data, mtry = ncol(model_data)^0.5, n.trees = 5000)
 predict_value = predict(forest1, newdata = kaggle_data)
 
 
 #write to file
 output_file[,2] = predict_value
-write.table(output_file, file ="submission.csv", sep = ",", qmethod = "double", row.names = FALSE)
+write.table(output_file, file ="submission_rf1.csv", sep = ",", qmethod = "double", row.names = FALSE)
 ```
 
-## Model 4: Bagging
+## Model 3: Random Forest, p = 25
+Random forests provide an improvement over bagged trees by way of a random small tweak that decorrelates the trees.
 ```{r}
 library(randomForest)
 
-forest1 = randomForest(IC50s ~ . - Cell.lines, model_data, mtry = 25, importantce = TRUE, n.trees = 5000)#p = 62
+forest1 = randomForest(IC50s ~ . - Cell.lines, model_data, mtry = 25, n.trees = 5000, importance = TRUE)
 predict_value = predict(forest1, newdata = kaggle_data)
+
 
 #write to file
 output_file[,2] = predict_value
-write.table(output_file, file ="submission.csv", sep = ",", qmethod = "double", row.names = FALSE)
+write.table(output_file, file ="submission_rf2.csv", sep = ",", qmethod = "double", row.names = FALSE)
 ```
 
-## Model 5: Boosting (odd error solution: In RStudio, just resize the right side to increase the width of the windows)
+## Model 4: Boosting
+odd error solution: In RStudio, just resize the right side to increase the width of the windows
 ```{r}
 library(gbm)
 
@@ -80,20 +82,68 @@ predict_value = predict(boost1, newdata = kaggle_data, n.trees = 5000)
 
 #write to file
 output_file[,2] = predict_value
+write.table(output_file, file ="submission_boosting.csv", sep = ",", qmethod = "double", row.names = FALSE)
+```
+
+## Model 5: lasso
+```{r}
+library(glmnet)
+#training data
+x_train= as.matrix(model_data[,3:ncol(model_data)])
+y_train= as.matrix((model_data[,2, drop = FALSE]))
+
+#create model
+temp_fit = cv.glmnet(x_train, y_train, standardize=TRUE, alpha = 1, parallel = TRUE)
+
+#validation on model
+x_test= as.matrix(kaggle_data[,3:ncol(kaggle_data)])
+predict_value = predict(temp_fit, newx=x_test, s="lambda.min")
+
+#write to file
+output_file[,2] = predict_value
 write.table(output_file, file ="submission.csv", sep = ",", qmethod = "double", row.names = FALSE)
 ```
 
-## 5-Fold Cross Validation for all models
+## comparison between bagging & random forest 
 ```{r}
-library(cvTools)
+library(randomForest)
+true_y = model_data$IC50s
+max_tree_num = 5000
+list = seq(1, max_tree_num, by = 100)
+
+mse_bagging = rep(0, length(list))
+mse_rf = rep(0, length(list))
+mse_rf2 = rep(0, length(list))
+mse_boosting = rep(0, length(list))
+
+for (i in c(1:length(list))) {
+  #bagging
+  bagging_model = randomForest(IC50s ~ . - Cell.lines, model_data, mtry = ncol(model_data), n.trees = list[i])
+  mse_bagging[i] = mean(( true_y - predict(bagging_model, newdata = model_data))^2)
+  
+  #forest 1
+  rf_model = randomForest(IC50s ~ . - Cell.lines, model_data, mtry = ncol(model_data)^0.5, n.trees = list[i])
+  mse_rf[i] = mean(( true_y - predict(rf_model, newdata = model_data))^2)
+ 
+  #forest 2
+  rf_model_2 = randomForest(IC50s ~ . - Cell.lines, model_data, mtry = 25, n.trees = list[i])
+  mse_rf2[i] = mean(( true_y - predict(rf_model_2, newdata = model_data))^2)  
+   
+  #boosting
+  boost1 = gbm(IC50s ~ . - Cell.lines, data = model_data, distribution = "gaussian", n.trees = list[i], interaction.depth = 1)
+  mse_boosting[i] = mean(( true_y - predict(boost1, newdata = model_data, n.trees = list[i]))^2)
+  print(i)
+}
 ```
 
-## 5-Fold Cross Validation for random forest
+##plot
 ```{r}
-
+par(mfrow=c(2,2))
+plot(list, mse_bagging,type="l",col="red",main="bagging", xlab = "num of trees")
+plot(list, mse_rf,type="l",col="black", main="random forest with mtr = p^0.5", xlab = "num of trees")
+plot(list, mse_rf2,type="l",col="black", main="random forest with mtr = 25", xlab = "num of trees")
+plot(list, mse_boosting,type="l",col="green", main="boosting", xlab = "num of trees")
 ```
-
-
 
 
 
