@@ -1,0 +1,145 @@
+\documentclass{beamer}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathrsfs}
+\usepackage[LGR,T1]{fontenc}
+\newcommand{\textgreek}[1]{\begingroup\fontencoding{LGR}\selectfont#1\endgroup}
+\usepackage[utf8]{inputenc}
+
+\title[MATH 6380 Project 2]{Finite subgroups of $\textup{O}(3)$}
+\subtitle{MATH 6380 project 2}
+\author[C.Dong, T.C.LO, J.Xia]
+{Chenyang,~DONG \and Tsz Cheung,~Lo \and Jiacheng,~XIA}
+\usetheme{Copenhagen}
+\usecolortheme{beaver}
+%%%
+% The next block of commands puts the table of contents at the 
+% beginning of each section and highlights the current section:
+
+\AtBeginSection[]
+{
+  \begin{frame}
+    \frametitle{Table of Contents}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+%
+%%%
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}
+\frametitle{Outline}
+\tableofcontents
+\end{frame}
+
+\section{Introduction}
+\begin{frame}
+\frametitle{Motivation}
+The symmetry has long been discussed by generations of mathematicians world-widely. One of the most significant sources of the idea of `symmetry', emerges from the study of geometry, which dates back to the ancient Greece; in fact, both `geometry' and `symmetry' are two loanwords of Greek origin: `\textgreek{?????????}' and `\textgreek{?????????}'. 
+
+However, in ancient Babylon, people have already discovered the symmetric pattern in the solutions to the quadratic equation; nonetheless, they did not have any symbols to represent their formulae. This is thought to be the root of symmetry. 
+\end{frame}
+
+\begin{frame}
+\frametitle{Project Topic}
+\begin{alertblock}{Topic}
+Find all finite symmetric groups of $\mathbb{R}^3$
+\end{alertblock}
+This is the topic from the second week's lecture of MATH 4999, delivered by Professor Jing-Song Huang.
+\end{frame}
+
+\section{Preliminaries}
+\begin{frame}
+\begin{block}{}
+Before presenting a detailed solution, we are introducing some basic algebraic knowledges for this project:
+\end{block}
+\begin{itemize}
+\item<1-> Linear groups
+\item<2-> Orbit stabilizer and counting theorem
+\item<3-> Apply the concepts to find solutions in $\mathbb{R}^2$
+
+\end{itemize}
+After these steps we go to detailed solutions in $\mathbb{R}^3$
+\end{frame}
+
+
+%%%%%%%%%%%% 2.1 discusses about linear groups
+
+\begin{frame}
+\frametitle{Definition of linear groups:}
+Recall that: \begin{itemize}
+\item<1-> A map $T: \mathbb{R}^m \rightarrow \mathbb{R}^n $ is called linear if for any $\vec{u}, \vec{v} \in \mathbb{R}^m$ and $a,b \in \mathbb{R}$, we have $$T(a\vec{u}+b\vec{v}) = aT(\vec{u})+bT(\vec{v})$$
+\item<2-> By fixing the basis vector, we can represent such a transformation in matrix format.
+\item<3-> The transformation has inverse iff such a matrix is invertible, such a transformation is a \alert{bijection}.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Definition of linear groups:}
+\begin{block}{$GL(n, \mathbb{R})$} The set of such invertible of linear group from $\mathbb{R}^n$ is called \alert{General Linear Group} and is denoted by $GL(n,\mathbb{R})$.
+\end{block}
+\begin{block}{$SL(n, \mathbb{R})$} The set of all invertible transformations with determinant 1 is (naturally) called \alert{Special Linear group} and is denoted by $SL(n, \mathbb{R})$.
+\end{block}
+\end{frame}
+
+\begin{frame}
+\frametitle{Definition of linear groups:}
+\begin{block}{Orthogonal transformation}
+Describes the transformation that preserves distance for all $\vec{x}$. $$T(\vec{x}) = \vec{x}$$.
+\end{block}
+Such transformation froms the orthogonal group $O(n)$, and the Special Orthogonal Groups can be defined similarly.
+\end{frame}
+
+\begin{frame}
+\frametitle{Definition of linear groups:}
+An orthogonal group is a linear group.
+\end{frame}
+
+
+%%%%%%%%%%%%% 2.2 
+
+\begin{frame}{Orbit-stabilizer theorem}
+\begin{block}{orbit}
+Given an action $G$ on a set $X$ and a point $x$ in $X$, the set of all images $g\cdot x$ for all $g$ in $G$ is called the orbit of $x$, and is written $O_x$. That is, $O_x=\{g\cdot x\ |\ g\in G\}$.
+\end{block}
+\begin{block}{Stabilizer}
+For a point $x$ in our set $X$, the elements of $G$ which leave $x$ fixed form a subgroup of $G$ called the stabilizer of $x$, $G_x$. That is, for a fixed $x$ in $X$, $G_x=\{g\in G\ |\ g\cdot x=x\}$.
+\end{block}
+\begin{block}{The orbit-stabilizer theorem}
+Let $X$ be a set, and $G$ a group acting on $X$. For each $x$ in $X$, the correspondence $g\cdot x\mapsto gG_x$ is a bijection between $O_x$ and the set of left cosets of $G_x$ in $G$.
+\end{block}
+\end{frame}
+
+\begin{frame}{Orbit-stabilizer theorem}
+\begin{block}{corollary}
+If $G$ is finite, the size of each orbit is a divisor of the order of $G$.
+\end{block}
+\begin{block}{The counting theorem}
+Let $G$ be a finite group acting on a set $X$, and write $X^g = \{x\ |\ g\cdot x = x\}$; that is, the set of $x$ in $X$ that are left fixed by a given element $g$ of $G$. The number of distinct orbits is:
+$$\frac{1}{|G|}\sum_{g\in G}|X^g|.$$
+In other words, the number of distinct orbits is the average number of points left fixed by an element of $G$.
+\end{block}
+\end{frame}
+
+%%%%%%%%%%%%%%%%
+
+\begin{frame}{Platonic solids}
+\end{frame}
+
+%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Finite symmetry groups in $\mathbb{R}^2$}
+\begin{block}{Theorem 1}
+A finite subgroup of $O(2)$ is either cyclic or dihedral.
+\end{block}
+\alert{brief proof:} \begin{itemize}
+\item<1-> If the group is in $SO(2)$, it represents the rotation about the origin.
+\item<2-> Otherwise, 
+\end{itemize}
+\end{frame}
+
+
+\end{document}
