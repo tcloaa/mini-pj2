@@ -5,6 +5,9 @@
 \usepackage[LGR,T1]{fontenc}
 \newcommand{\textgreek}[1]{\begingroup\fontencoding{LGR}\selectfont#1\endgroup}
 \usepackage[utf8]{inputenc}
+\usepackage{caption}
+\usepackage{graphicx}
+\graphicspath{ {tu/} }
 
 \title[MATH 6380 Project 2]{Study on tree-based methods.}
 \subtitle{MATH 6380 project 2}
@@ -61,8 +64,36 @@ This dataset and the preprocessing are the same as project 1.
 Do straightforward analysis and compare with Lasso (PJ 1).
 \end{exampleblock}
 \begin{alertblock}{What we found}
-Simple regression tree out-perform Lasso; bagging, random forest and boosting even better.
+In terms of MSE, simple regression tree(0.11) slightly worse than Lasso(0.06); bagging, random forest and boosting even better(0.04, 0.02).
 \end{alertblock}
+\end{frame}
+
+\begin{frame}
+\frametitle{Visualize the results}
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=10cm, height=4cm]{crime_treetu}
+  \caption{Regression tree on crime data}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+\frametitle{Boosting and random forests}
+\begin{figure}
+\centering
+\begin{minipage}{.5\textwidth}
+  \centering
+  \includegraphics[width=.8\linewidth,height=4cm]{crime_boosttu}
+  \captionof{figure}{Importance\\ from boosting}
+  \label{fig:test1}
+\end{minipage}%
+\begin{minipage}{.5\textwidth}
+  \centering
+  \includegraphics[width=.8\linewidth,height=4cm]{crime_randtu}
+  \captionof{figure}{Importance\\ from random forest}
+  \label{fig:test2}
+\end{minipage}
+\end{figure}
 \end{frame}
 
 %segfaultdong part
