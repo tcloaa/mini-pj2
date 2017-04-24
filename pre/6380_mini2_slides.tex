@@ -5,6 +5,9 @@
 \usepackage[LGR,T1]{fontenc}
 \newcommand{\textgreek}[1]{\begingroup\fontencoding{LGR}\selectfont#1\endgroup}
 \usepackage[utf8]{inputenc}
+\usepackage{caption}
+\usepackage{graphicx}
+\graphicspath{ {tu/} }
 
 \title[MATH 6380 Project 2]{Study on tree-based methods.}
 \subtitle{MATH 6380 project 2}
@@ -50,6 +53,8 @@ Why did we choose tree-based methods?
 \end{itemize}
 \end{frame}
 
+
+%xia's part
 \section{American Crime Dataset}
 \begin{frame}
 \begin{block}{The dataset}
@@ -60,14 +65,100 @@ This dataset and the preprocessing are the same as project 1.
 Do straightforward analysis and compare with Lasso (PJ 1).
 \end{exampleblock}
 \begin{alertblock}{What we found}
-Simple regression tree out-perform Lasso; bagging, random forest and boosting even better.
+In terms of MSE, simple regression tree(0.11) slightly worse than Lasso(0.06); bagging, random forest and boosting even better(0.04, 0.02).
 \end{alertblock}
 \end{frame}
 
-\section{Kaggle 1: ComboDrug Dataset }
+\begin{frame}
+\frametitle{Visualize the results}
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=10cm, height=4cm]{crime_treetu}
+  \caption{Regression tree on crime data}
+\end{figure}
+\end{frame}
 
-\section{Kaggle 2: BinaryDrug Dataset}
+\begin{frame}
+\frametitle{Boosting and random forests}
+\begin{figure}
+\centering
+\begin{minipage}{.5\textwidth}
+  \centering
+  \includegraphics[width=.8\linewidth,height=4cm]{crime_boosttu}
+  \captionof{figure}{Importance\\ from boosting}
+  \label{fig:test1}
+\end{minipage}%
+\begin{minipage}{.5\textwidth}
+  \centering
+  \includegraphics[width=.8\linewidth,height=4cm]{crime_randtu}
+  \captionof{figure}{Importance\\ from random forest}
+  \label{fig:test2}
+\end{minipage}
+\end{figure}
+\end{frame}
 
+
+%phil's part
+\section{Kaggle: Binray Drug}
+\begin{frame}
+\frametitle{Variable Importance}
+\begin{itemize}
+\item The $\textbf{R randomForest}$ package optionally produces 2 additional pieces of information. One is called $\textbf{Variable Importance}$, a measure of the importance of the predictor variables.
+
+\item The random forest algorithm estimates the importance of a variable by looking at how much prediction error increases when (OOB) data for that variable is permuted while all others are left unchanged.
+
+\item In this project, we define variables/predictors with $\%IncMSE > 0 $ as important variables, then select them as our predictors in our final model.	
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Importanct Variables in BinaryDrug}
+The necessary calculations are carried out tree by tree as the random forest is constructed. Our experience has been that even though the variable importance measures may vary from run to run, the ranking of the importances is quite stable.
+\begin{figure}[h]
+	\includegraphics[width=5cm, height=6cm]{bagging_vi}
+	\caption{I.V in BinaryDrug Data}
+\end{figure}
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{A potential variable selection method?}
+\begin{itemize}
+	\item We have tried $LASSO$ in this dataset. Bad.
+	
+	\item Somebody introduced $p-value$ selection. Kaggle $MSE$ = 3.08. Good.
+	
+	\item Can we do better using variable importance?
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{some V.I related models}
+\begin{itemize}
+	\item V.I + $MLR$, Kaggle $MSE$ = 3.26057
+	\pause
+	\item V.I + $randomForest$, Kaggle $MSE$ = 3.23067\\
+	\pause
+	\item So sad.
+\end{itemize}
+\end{frame}
+
+
+
+
+\begin{frame}
+\frametitle{Some Conclusions}
+We came up with some conclusions (inferences):
+\begin{enumerate}[<+(1)->]
+	\item dummy1
+	\item dummy2
+\end{enumerate}
+\end{frame}
+
+
+%who's part?
 \section{Analysis and Conclusion}
 
 \end{document}

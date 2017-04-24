@@ -33,7 +33,7 @@ output_file <- read.csv(file="submission.csv", header=TRUE, sep=",", stringsAsFa
 ```{r}
 library(randomForest)
 
-forest1 = randomForest(IC50s ~ . - Cell.lines, model_data, mtry = ncol(model_data), n.trees = 5000, importance = TRUE)
+forest1 = randomForest(IC50s ~ . - Cell.lines, model_data, mtry = ncol(model_data)-2, n.trees = 5000, importance = TRUE)
 predict_value = predict(forest1, newdata = kaggle_data)
 
 importance (forest1)
@@ -44,21 +44,101 @@ output_file[,2] = predict_value
 write.table(output_file, file ="submission_bagging.csv", sep = ",", qmethod = "double", row.names = FALSE)
 ```
 
-## Model 3: Random Forest
+## vi + mlr
+```{r}
+forest1 = lm(IC50s ~ MLL_AFF1 +
+BRCA2 +
+SMO +
+SOCS1 +
+FAM123B +
+FBXW7 +
+FLCN +
+EWS_FLI1 +
+CDKN2a.p14.  +
+PIK3R1 +
+MSH2 +
+MLH1 +
+KDM5C +
+TET2 +
+MYC +
+APC +
+MAP2K4 +
+NF1 +
+BRAF +
+KDM6A +
+KRAS +
+VHL +
+NOTCH1 +
+RUNX1 +
+JAK2 +
+EGFR +
+SMAD4 +
+NRAS +
+ERBB2, data = model_data)
+
+predict_value = predict(forest1, newdata = kaggle_data)
+
+output_file[,2] = predict_value
+write.table(output_file, file ="output.csv", sep = ",", qmethod = "double", row.names = FALSE)
+```
+
+## vi + random forest
+```{r}
+library(randomForest)
+
+forest1 = randomForest(IC50s ~ MLL_AFF1 +
+BRCA2 +
+SMO +
+SOCS1 +
+FAM123B +
+FBXW7 +
+FLCN +
+EWS_FLI1 +
+CDKN2a.p14.  +
+PIK3R1 +
+MSH2 +
+MLH1 +
+KDM5C +
+TET2 +
+MYC +
+APC +
+MAP2K4 +
+NF1 +
+BRAF +
+KDM6A +
+KRAS +
+VHL +
+NOTCH1 +
+RUNX1 +
+JAK2 +
+EGFR +
+SMAD4 +
+NRAS +
+ERBB2, model_data, mtry = 29, n.trees = 5000)
+predict_value = predict(forest1, newdata = kaggle_data)
+
+#write to file
+output_file[,2] = predict_value
+write.table(output_file, file ="output.csv", sep = ",", qmethod = "double", row.names = FALSE)
+```
+
+## Model 3: Random Forest, mtry = p^0.5
 Random forests provide an improvement over bagged trees by way of a random small tweak that decorrelates the trees.
 ```{r}
 library(randomForest)
 
-forest1 = randomForest(IC50s ~ . - Cell.lines, model_data, mtry = ncol(model_data)^0.5, n.trees = 5000)
+forest1 = randomForest(IC50s ~ . - Cell.lines, model_data, mtry = ncol(model_data)^0.5, n.trees = 5000, importance = TRUE)
 predict_value = predict(forest1, newdata = kaggle_data)
 
+importance (forest1)
+varImpPlot (forest1)
 
 #write to file
 output_file[,2] = predict_value
 write.table(output_file, file ="submission_rf1.csv", sep = ",", qmethod = "double", row.names = FALSE)
 ```
 
-## Model 3: Random Forest, p = 25
+## Model 3: Random Forest, mtry = 25
 Random forests provide an improvement over bagged trees by way of a random small tweak that decorrelates the trees.
 ```{r}
 library(randomForest)
