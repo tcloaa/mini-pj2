@@ -105,7 +105,8 @@ In terms of MSE, simple regression tree(0.11) slightly worse than Lasso(0.06); b
 \begin{itemize}
 \item The $\textbf{R randomForest}$ package optionally produces 2 additional pieces of information. One is called $\textbf{Variable Importance}$, a measure of the importance of the predictor variables.
 
-\item The random forest algorithm estimates the importance of a variable by looking at how much prediction error increases when (OOB) data for that variable is permuted while all others are left unchanged.
+\item It is based upon the mean decrease of accuracy in predictions on the out of bag samples
+when a given variable is excluded from the model.
 
 \item In this project, we define variables/predictors with $\%IncMSE > 0 $ as important variables, then select them as our predictors in our final model.	
 \end{itemize}
@@ -137,28 +138,32 @@ The necessary calculations are carried out tree by tree as the random forest is 
 \begin{frame}
 \frametitle{some V.I related models}
 \begin{itemize}
-	\item V.I + $MLR$, Kaggle $MSE$ = 3.26057
+	\item V.I + $\textbf{MLR}$, Kaggle $MSE$ = 3.26057
 	\pause
-	\item V.I + $randomForest$, Kaggle $MSE$ = 3.23067\\
+	\item V.I + $\textbf{Random Forest}$ with using all V.I, Kaggle $MSE$ = 3.23067\\
 	\pause
-	\item So sad.
+	\item So sad. And I don't know why.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{However...}
+\begin{itemize}
+	\item What if we adapt a $\textbf{Random Forest}$ with $mtry$ slightly > \# of V.I ?
+	\item Say in this Kaggle Competition, \# of V.I is 25, and we have tried $mtry = 25 \text{ to } 30$, all giving us $MSE$ lower than 3.10.
+	\item (Maybe) this can be explained from that, using slightly more $mtry$ in each iteration can have a higher chance covering all those V.I when building  $\textbf{Random Forest}$.
 \end{itemize}
 \end{frame}
 
 
-
-
+%who's part?
+\section{Conclusion}
 \begin{frame}
-\frametitle{Some Conclusions}
-We came up with some conclusions (inferences):
-\begin{enumerate}[<+(1)->]
-	\item dummy1
-	\item dummy2
+\frametitle{To conclude our work in PJ2...}
+\begin{enumerate}
+	\item Tree-based regression algos are suitable for these discrete-input, continous-output dataset
+	\item As a metric, $\textbf{Variable Importance}$ may not be useful for variable selection process.
 \end{enumerate}
 \end{frame}
-
-
-%who's part?
-\section{Analysis and Conclusion}
 
 \end{document}
