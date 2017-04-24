@@ -1,0 +1,73 @@
+\documentclass{beamer}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathrsfs}
+\usepackage[LGR,T1]{fontenc}
+\newcommand{\textgreek}[1]{\begingroup\fontencoding{LGR}\selectfont#1\endgroup}
+\usepackage[utf8]{inputenc}
+
+\title[MATH 6380 Project 2]{Study on tree-based methods.}
+\subtitle{MATH 6380 project 2}
+\author[C.Dong, T.C.LO, J.Xia]
+{Chenyang,~DONG \and Tsz Cheung,~LO \and Jiacheng,~XIA}
+\usetheme{CambridgeUS}
+%\usecolortheme{wolverine}
+%%%
+% The next block of commands puts the table of contents at the 
+% beginning of each section and highlights the current section:
+
+\AtBeginSection[]
+{
+  \begin{frame}
+    \frametitle{Table of Contents}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+%
+%%%
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}
+\frametitle{Outline}
+\tableofcontents
+\end{frame}
+
+\section{Introduction}
+\begin{frame}
+\frametitle{Studying tree based methods...}
+Why did we choose tree-based methods?
+\pause
+\begin{itemize}
+\item We went through several methods.
+\pause
+\item Tree-based methods are straight-forward and easy to implement.
+\pause
+\item There are yet many improvement methods.
+\pause
+\item Studied the method on 3 datasets.
+\end{itemize}
+\end{frame}
+
+\section{American Crime Dataset}
+\begin{frame}
+\begin{block}{The dataset}
+This dataset and the preprocessing are the same as project 1.
+\end{block}
+\pause
+\begin{exampleblock}{Goal for this dataset}
+Do straightforward analysis and compare with Lasso (PJ 1).
+\end{exampleblock}
+\begin{alertblock}{What we found}
+Simple regression tree out-perform Lasso; bagging, random forest and boosting even better.
+\end{alertblock}
+\end{frame}
+
+\section{Kaggle 1: ComboDrug Dataset }
+
+\section{Kaggle 2: BinaryDrug Dataset}
+
+\section{Analysis and Conclusion}
+
+\end{document}
