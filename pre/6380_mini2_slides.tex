@@ -53,6 +53,7 @@ Why did we choose tree-based methods?
 \end{itemize}
 \end{frame}
 
+
 %xia's part
 \section{American Crime Dataset}
 \begin{frame}
@@ -96,28 +97,56 @@ In terms of MSE, simple regression tree(0.11) slightly worse than Lasso(0.06); b
 \end{figure}
 \end{frame}
 
-%segfaultdong part
-\section{Kaggle 1:  ComboDrug}
-
 
 %phil's part
-\section{Kaggle 2: Binray Drug}
+\section{Kaggle: Binray Drug}
 \begin{frame}
-\frametitle{Models and Kaggle Results}
-Dummy1
-\pause
-Dummy2
-\end{frame}
-
-\begin{frame}
-Dummy
 \frametitle{Variable Importance}
+\begin{itemize}
+\item The $\textbf{R randomForest}$ package optionally produces 2 additional pieces of information. One is called $\textbf{Variable Importance}$, a measure of the importance of the predictor variables.
+
+\item The random forest algorithm estimates the importance of a variable by looking at how much prediction error increases when (OOB) data for that variable is permuted while all others are left unchanged.
+
+\item In this project, we define variables/predictors with $\%IncMSE > 0 $ as important variables, then select them as our predictors in our final model.	
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Importanct Variables in BinaryDrug}
+The necessary calculations are carried out tree by tree as the random forest is constructed. Our experience has been that even though the variable importance measures may vary from run to run, the ranking of the importances is quite stable.
+\begin{figure}[h]
+	\includegraphics[width=5cm, height=6cm]{bagging_vi}
+	\caption{I.V in BinaryDrug Data}
+\end{figure}
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{A potential variable selection method?}
+\begin{itemize}
+	\item We have tried $LASSO$ in this dataset. Bad.
+	
+	\item Somebody introduced $p-value$ selection. Kaggle $MSE$ = 3.08. Good.
+	
+	\item Can we do better using variable importance?
+\end{itemize}
 \end{frame}
 
 \begin{frame}
-Dummy
-\frametitle{Compared with p-value Selection}
+\frametitle{some V.I related models}
+\begin{itemize}
+	\item V.I + $MLR$, Kaggle $MSE$ = 3.26057
+	\pause
+	\item V.I + $randomForest$, Kaggle $MSE$ = 3.23067\\
+	\pause
+	\item So sad.
+\end{itemize}
 \end{frame}
+
+
+
 
 \begin{frame}
 \frametitle{Some Conclusions}
